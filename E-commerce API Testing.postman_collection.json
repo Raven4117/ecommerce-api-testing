@@ -1,0 +1,703 @@
+{
+  "info": {
+    "_postman_id": "22c4bcff-abfc-46a0-b71c-af30467301cd",
+    "name": "E-commerce API Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54062557",
+    "_collection_link": "https://go.postman.co/collection/54062557-22c4bcff-abfc-46a0-b71c-af30467301cd?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "E-commerce API Testing",
+      "item": [
+        {
+          "name": "Products",
+          "item": [
+            {
+              "name": "GET - Retrieve All Products",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Single Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Product ID is 1\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.id).to.eql(1);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Product has a valid price\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.price).to.be.a(\"number\");\r",
+                      "    pm.expect(response.price).to.be.above(0);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/1",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Products with Limit",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Exactly 10 products are returned\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.products).to.have.lengthOf(10);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Limit is 10\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.limit).to.eql(10);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Total is greater than returned products\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.total).to.be.above(response.products.length);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products?limit=10",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Products with Zero Limit",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "const response = pm.response.json();\r\n\r\nconsole.log(\"Products returned:\", response.products.length);\r\nconsole.log(\"Reported limit:\", response.limit);\r\nconsole.log(\"Total products:\", response.total);"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products?limit=0",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Product Categories",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains a categories array\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response).to.be.an(\"array\");\r",
+                      "    pm.expect(response.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Exactly 24 categories are returned\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response).to.have.lengthOf(24);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Every category has a name\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    response.forEach(function (category) {\r",
+                      "        pm.expect(category.name).to.be.a(\"string\");\r",
+                      "        pm.expect(category.name).to.not.be.empty;\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/categories",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Products by Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains products\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.products).to.be.an(\"array\");\r",
+                      "    pm.expect(response.products.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"All products belong to smartphones category\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    response.products.forEach(function (product) {\r",
+                      "        pm.expect(product.category).to.eql(\"smartphones\");\r",
+                      "    });\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Every product has an ID\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    response.products.forEach(function (product) {\r",
+                      "        pm.expect(product.id).to.be.a(\"number\");\r",
+                      "    });\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/category/smartphones",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "category",
+                    "smartphones"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Product Search",
+          "item": [
+            {
+              "name": "GET - Search Products",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains a products array\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.products).to.be.an(\"array\");\r",
+                      "    pm.expect(response.products.length).to.be.above(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Every returned product has an ID\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    response.products.forEach(function (product) {\r",
+                      "        pm.expect(product.id).to.be.a(\"number\");\r",
+                      "    });\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Total is greater than or equal to returned products\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.total).to.be.at.least(response.products.length);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/search?q=phone",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "q",
+                      "value": "phone"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Shopping Cart",
+          "item": [
+            {
+              "name": "GET - Retrieve All Carts",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response contains a carts array\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.carts).to.be.an(\"array\");\r\n    pm.expect(response.carts.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Every cart has an ID and user ID\", function () {\r\n    const response = pm.response.json();\r\n\r\n    response.carts.forEach(function (cart) {\r\n        pm.expect(cart.id).to.be.a(\"number\");\r\n        pm.expect(cart.userId).to.be.a(\"number\");\r\n    });\r\n});\r\n\r\npm.test(\"Every cart contains a products array\", function () {\r\n    const response = pm.response.json();\r\n\r\n    response.carts.forEach(function (cart) {\r\n        pm.expect(cart.products).to.be.an(\"array\");\r\n    });\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/carts",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Single Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cart ID is 1\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Cart has a valid user ID\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.userId).to.be.a(\"number\");\r\n    pm.expect(response.userId).to.be.above(0);\r\n});\r\n\r\npm.test(\"Cart contains 4 products\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.products).to.have.lengthOf(4);\r\n});\r\n\r\npm.test(\"Every product has the required fields\", function () {\r\n    const response = pm.response.json();\r\n\r\n    response.products.forEach(function (product) {\r\n        pm.expect(product.id).to.be.a(\"number\");\r\n        pm.expect(product.title).to.be.a(\"string\");\r\n        pm.expect(product.quantity).to.be.a(\"number\");\r\n        pm.expect(product.price).to.be.a(\"number\");\r\n    });\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/carts/1",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST - Create Shopping Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\r\nconst response = pm.response.json();\r\n\r\n// Check HTTP status\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\n// Check cart ID\r\npm.test(\"Cart has a valid ID\", function () {\r\n    pm.expect(response.id).to.be.a(\"number\");\r\n});\r\n\r\n// Check user ID\r\npm.test(\"Cart belongs to user 1\", function () {\r\n    pm.expect(response.userId).to.equal(1);\r\n});\r\n\r\n// Check number of products\r\npm.test(\"Cart contains 2 product entries\", function () {\r\n    pm.expect(response.products).to.have.lengthOf(2);\r\n});\r\n\r\n// Check product quantities\r\npm.test(\"Product quantities are correct\", function () {\r\n    pm.expect(response.products[0].id).to.equal(1);\r\n    pm.expect(response.products[0].quantity).to.equal(2);\r\n\r\n    pm.expect(response.products[1].id).to.equal(2);\r\n    pm.expect(response.products[1].quantity).to.equal(1);\r\n});\r\n\r\n// Check total products\r\npm.test(\"Total products is 2\", function () {\r\n    pm.expect(response.totalProducts).to.equal(2);\r\n});\r\n\r\n// Check total quantity\r\npm.test(\"Total quantity is 3\", function () {\r\n    pm.expect(response.totalQuantity).to.equal(3);\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"userId\": 1,\r\n    \"products\": [\r\n        {\r\n            \"id\": 1,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://dummyjson.com/carts/add",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT - Update Shopping Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cart ID is 1\", function () {\r\n    pm.expect(response.id).to.equal(1);\r\n});\r\n\r\npm.test(\"User ID is 1\", function () {\r\n    pm.expect(response.userId).to.equal(1);\r\n});\r\n\r\npm.test(\"Cart contains 2 products\", function () {\r\n    pm.expect(response.products).to.have.lengthOf(2);\r\n});\r\n\r\npm.test(\"Product 1 quantity is 5\", function () {\r\n    const product = response.products.find(p => p.id === 1);\r\n    pm.expect(product).to.exist;\r\n    pm.expect(product.quantity).to.equal(5);\r\n});\r\n\r\npm.test(\"Product 2 quantity is 2\", function () {\r\n    const product = response.products.find(p => p.id === 2);\r\n    pm.expect(product).to.exist;\r\n    pm.expect(product.quantity).to.equal(2);\r\n});\r\n\r\npm.test(\"Total quantity is 7\", function () {\r\n    pm.expect(response.totalQuantity).to.equal(7);\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\r\n{\r\n    \"userId\": 1,\r\n    \"products\": [\r\n        {\r\n            \"id\": 1,\r\n            \"quantity\": 5\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"quantity\": 2\r\n        }\r\n    ]\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://dummyjson.com/carts/1",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE - Delete Shopping Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Deleted cart ID is 1\", function () {\r\n    pm.expect(response.id).to.equal(1);\r\n});\r\n\r\npm.test(\"User ID is 1\", function () {\r\n    pm.expect(response.userId).to.equal(1);\r\n});\r\n\r\npm.test(\"Cart is marked as deleted\", function () {\r\n    pm.expect(response.isDeleted).to.equal(true);\r\n});\r\n\r\npm.test(\"Deletion timestamp is present\", function () {\r\n    pm.expect(response.deletedOn).to.exist;\r\n});\r\n"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/carts/1",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative Testing",
+          "item": [
+            {
+              "name": "GET - Retrieve Nonexistent Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Error message exists\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.message).to.be.a(\"string\");\r",
+                      "    pm.expect(response.message).to.not.be.empty;\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"No valid product ID is returned\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.id).to.be.undefined;\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/99999",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "99999"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Product Using Invalid ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/abc",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "abc"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Products from Invalid Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains a products array\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.products).to.be.an(\"array\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Products array is empty\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.products).to.have.lengthOf(0);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Total matching products is zero\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(response.total).to.eql(0);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/products/category/not-a-real-category",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "products",
+                    "category",
+                    "not-a-real-category"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET - Retrieve Nonexistent Cart",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Error message is correct\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.message).to.eql(\r\n        \"Cart with id '99999' not found\"\r\n    );\r\n});\r\n\r\npm.test(\"No cart ID is returned\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.id).to.be.undefined;\r\n});\r\n\r\npm.test(\"No products array is returned\", function () {\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.products).to.be.undefined;\r\n});"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "https://dummyjson.com/carts/99999",
+                  "protocol": "https",
+                  "host": [
+                    "dummyjson",
+                    "com"
+                  ],
+                  "path": [
+                    "carts",
+                    "99999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
